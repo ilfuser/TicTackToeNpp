@@ -1,0 +1,85 @@
+.game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 40px auto;
+    max-width: 400px;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  h1 {
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .status {
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #555;
+  }
+  
+  .board {
+    border: 2px solid #333;
+    border-radius: 5px;
+    background-color: #f8f8f8;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .board-row {
+    display: flex;
+  }
+  
+  .square {
+    width: 80px;
+    height: 80px;
+    border: 1px solid #999;
+    font-size: 36px;
+    font-weight: bold;
+    line-height: 80px;
+    text-align: center;
+    background: white;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+    transition: background-color 0.3s;
+  }
+  
+  .square:hover {
+    background-color: #e6e6e6;
+  }
+  
+  .square:focus {
+    outline: none;
+  }
+  
+  .new-game-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .new-game-button:hover {
+    background-color: #45a049;
+  }
+  
+  .new-game-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  .error {
+    padding: 10px;
+    background-color: #ffeeee;
+    color: #dd0000;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    width: 100%;
+    text-align: center;
+  }
