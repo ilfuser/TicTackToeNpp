@@ -20,7 +20,12 @@ const TicTacToe = () => {
   const createNewGame = async () => {
     try {
       setLoading(true);
+      console.log("Отправка запроса на создание новой игры");
+      
+      // Используем полный URL для устранения проблем с маршрутизацией
       const response = await axios.post('/api/game');
+      console.log("Ответ от сервера:", response.data);
+      
       const newGame = response.data;
       setGame({
         id: newGame.id,
@@ -30,8 +35,8 @@ const TicTacToe = () => {
       });
       setError(null);
     } catch (err) {
-      setError('Не удалось создать новую игру');
-      console.error(err);
+      console.error("Ошибка при создании игры:", err);
+      setError('Не удалось создать новую игру: ' + (err.message || 'Неизвестная ошибка'));
     } finally {
       setLoading(false);
     }
@@ -47,24 +52,36 @@ const TicTacToe = () => {
     newBoard[index] = game.isXNext ? 'X' : 'O';
 
     const winner = calculateWinner(newBoard);
-    const updatedGame = {
-      board: JSON.stringify(newBoard),
-      isXNext: !game.isXNext,
-      winner: winner
-    };
+    
+    // Проверяем, установлен ли id игры
+    if (!game.id) {
+      console.error("ID игры не установлен. Невозможно обновить игру.");
+      setError("ID игры не установлен. Пожалуйста, начните новую игру.");
+      return;
+    }
 
     try {
       setLoading(true);
+      console.log(`Отправка хода на сервер. ID игры: ${game.id}`);
+      
+      const updatedGame = {
+        board: JSON.stringify(newBoard),
+        isXNext: !game.isXNext,
+        winner: winner
+      };
+      
       await axios.put(`/api/game/${game.id}`, updatedGame);
+      
       setGame({
         ...game,
         board: newBoard,
         isXNext: !game.isXNext,
         winner: winner
       });
+      setError(null);
     } catch (err) {
-      setError('Не удалось обновить игру');
-      console.error(err);
+      console.error("Ошибка при обновлении игры:", err);
+      setError('Не удалось сделать ход: ' + (err.message || 'Неизвестная ошибка'));
     } finally {
       setLoading(false);
     }
@@ -98,8 +115,19 @@ const TicTacToe = () => {
   };
 
   const renderSquare = (index) => {
+    let btnClass = "square btn";
+    
+    // Добавляем разные стили в зависимости от содержимого клетки
+    if (game.board[index] === 'X') {
+      btnClass += " btn-primary";
+    } else if (game.board[index] === 'O') {
+      btnClass += " btn-danger";
+    } else {
+      btnClass += " btn-light";
+    }
+
     return (
-      <button className="square" onClick={() => handleClick(index)}>
+      <button className={btnClass} onClick={() => handleClick(index)}>
         {game.board[index]}
       </button>
     );
@@ -115,38 +143,81 @@ const TicTacToe = () => {
     }
   };
 
+  // Определить стиль для статуса игры на основе состояния
+  const getStatusBadgeClass = () => {
+    if (game.winner === 'X') return 'bg-primary';
+    if (game.winner === 'O') return 'bg-danger';
+    if (game.winner === 'Ничья') return 'bg-warning';
+    return game.isXNext ? 'bg-primary' : 'bg-danger';
+  };
+
   return (
-    <div className="game-container">
-      <h1>Крестики-нолики</h1>
-      {error && <div className="error">{error}</div>}
-      
-      <div className="status">{getStatus()}</div>
-      
-      <div className="board">
-        <div className="board-row">
-          {renderSquare(0)}
-          {renderSquare(1)}
-          {renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {renderSquare(3)}
-          {renderSquare(4)}
-          {renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {renderSquare(6)}
-          {renderSquare(7)}
-          {renderSquare(8)}
+    <div className="container py-5">
+      <div className="row justify-content-center">
+        <div className="col-md-8 col-lg-6">
+          <div className="card shadow">
+            <div className="card-header bg-dark text-white text-center">
+              <h1 className="mb-0">Крестики-нолики</h1>
+            </div>
+            <div className="card-body">
+              {error && (
+                <div className="alert alert-danger" role="alert">
+                  {error}
+                </div>
+              )}
+              
+              <div className="text-center mb-4">
+                <span className={`badge ${getStatusBadgeClass()} fs-5 p-2`}>
+                  {getStatus()}
+                </span>
+                {game.id && (
+                  <div className="mt-2 text-muted">
+                    <small>ID игры: {game.id}</small>
+                  </div>
+                )}
+              </div>
+              
+              <div className="board mx-auto">
+                <div className="board-row">
+                  {renderSquare(0)}
+                  {renderSquare(1)}
+                  {renderSquare(2)}
+                </div>
+                <div className="board-row">
+                  {renderSquare(3)}
+                  {renderSquare(4)}
+                  {renderSquare(5)}
+                </div>
+                <div className="board-row">
+                  {renderSquare(6)}
+                  {renderSquare(7)}
+                  {renderSquare(8)}
+                </div>
+              </div>
+              
+              <div className="text-center mt-4">
+                <button 
+                  className="btn btn-success btn-lg" 
+                  onClick={createNewGame}
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                      Загрузка...
+                    </>
+                  ) : (
+                    'Новая игра'
+                  )}
+                </button>
+              </div>
+            </div>
+            <div className="card-footer text-center text-muted">
+              <small>ASP.NET Core 8 + PostgreSQL + React + Bootstrap 5</small>
+            </div>
+          </div>
         </div>
       </div>
-      
-      <button 
-        className="new-game-button" 
-        onClick={createNewGame}
-        disabled={loading}
-      >
-        Новая игра
-      </button>
     </div>
   );
 };

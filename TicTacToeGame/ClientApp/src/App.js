@@ -13,7 +13,17 @@ export default class App extends Component {
     render() {
         return (
             <div className="App">
+                <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+                    <div className="container">
+                        <a className="navbar-brand" href="/">Крестики-нолики</a>
+                    </div>
+                </nav>
                 <TicTacToe />
+                <footer className="bg-light text-center text-muted py-3 mt-5">
+                    <div className="container">
+                        &copy; {new Date().getFullYear()} Крестики-нолики • ASP.NET Core 8 + PostgreSQL + React + Bootstrap 5
+                    </div>
+                </footer>
 
                 <Layout>
                     <Routes>

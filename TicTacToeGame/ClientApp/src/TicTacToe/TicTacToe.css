@@ -1,29 +1,11 @@
-.game-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 40px auto;
-    max-width: 400px;
-    font-family: 'Arial', sans-serif;
-  }
-  
-  h1 {
-    color: #333;
-    margin-bottom: 20px;
-  }
-  
-  .status {
-    margin-bottom: 20px;
-    font-size: 20px;
-    font-weight: bold;
-    color: #555;
-  }
-  
-  .board {
+/* Стили для игровой доски */
+.board {
+    display: inline-block;
     border: 2px solid #333;
-    border-radius: 5px;
+    border-radius: 8px;
     background-color: #f8f8f8;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
   }
   
   .board-row {
@@ -33,53 +15,62 @@
   .square {
     width: 80px;
     height: 80px;
-    border: 1px solid #999;
+    border: 1px solid #ddd;
     font-size: 36px;
     font-weight: bold;
-    line-height: 80px;
+    line-height: 1;
     text-align: center;
-    background: white;
-    cursor: pointer;
-    margin: 0;
     padding: 0;
-    transition: background-color 0.3s;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
   }
   
-  .square:hover {
-    background-color: #e6e6e6;
+  /* Убираем отступы Bootstrap для кнопок внутри сетки */
+  .board-row .square {
+    border-radius: 0;
   }
   
-  .square:focus {
-    outline: none;
+  /* Закругляем углы у крайних клеток */
+  .board-row:first-child .square:first-child {
+    border-top-left-radius: 6px;
+  }
+  .board-row:first-child .square:last-child {
+    border-top-right-radius: 6px;
+  }
+  .board-row:last-child .square:first-child {
+    border-bottom-left-radius: 6px;
+  }
+  .board-row:last-child .square:last-child {
+    border-bottom-right-radius: 6px;
   }
   
-  .new-game-button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+  /* Анимация при наведении и нажатии */
+  .square:hover:not(:disabled) {
+    transform: scale(1.05);
+    z-index: 1;
   }
   
-  .new-game-button:hover {
-    background-color: #45a049;
+  .square:active:not(:disabled) {
+    transform: scale(0.95);
   }
   
-  .new-game-button:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
+  /* Стили для X и O внутри кнопок */
+  .btn-primary {
+    font-weight: bold;
   }
   
-  .error {
-    padding: 10px;
-    background-color: #ffeeee;
-    color: #dd0000;
-    border-radius: 4px;
-    margin-bottom: 20px;
-    width: 100%;
-    text-align: center;
+  .btn-danger {
+    font-weight: bold;
+  }
+  
+  /* Адаптивность для мобильных устройств */
+  @media (max-width: 576px) {
+    .square {
+      width: 60px;
+      height: 60px;
+      font-size: 28px;
+    }
   }
